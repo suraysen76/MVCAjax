@@ -1,0 +1,101 @@
+﻿@{
+ViewBag.Title = "MVC Ajax Call ";
+}
+
+<h1>
+    MVC Ajax Call
+</h1>
+@using (Html.BeginForm("CategoryChosen", "Home",
+                FormMethod.Get))
+{
+<table cellspacing="2" cellpadding="2">
+    <tr>
+        <td>
+            Category Type :
+        </td>
+        <td>
+            <input id="btnGetData" type="button" onclickX="GetData()" value="Get"/>
+        </td>
+    </tr>
+</table>
+
+<br />
+    
+<div>
+    <table id="tblEmployees" class="tblEmployees">
+        <thead>
+            <tr>
+                <th align="left" class="productth">ID</th>
+                <th align="left" class="productth">Name</th>
+                <th align="left" class="productth">Salary</th>
+                <th align="left" class="productth">EmpNo</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+</div>
+
+    <style type="text/css">
+        .tblEmployees {
+        font-family: verdana,arial,sans-serif;
+        font-size: 11px;
+        color: #333333;
+        border-width: 1px;
+        border-color: #666666;
+        border-collapse: collapse;
+    }
+
+    .productth {
+        border-width: 1px;
+        padding: 8px;
+        border-style: solid;
+        border-color: #666666;
+        background-color: #dedede;
+    }
+
+    .prtoducttd {
+        border-width: 1px;
+        padding: 8px;
+        border-style: solid;
+        border-color: #666666;
+        background-color: #ffffff;
+    }
+</style>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#btnGetData").click(function () {
+                alert("Start");
+                $("#tblEmployees tbody tr").remove();
+                $.ajax({
+                      type: 'GET',
+                      url: '@Url.Action("GetEmployees")',
+                      dataType: 'json',
+                      success: function (data) {
+                        var items = '';
+                        $.each(data, function (i, item) {
+                            var rows = "<tr>"
+                                + "<td class='prtoducttd'>" + item.Id + "</td>"
+                                + "<td class='prtoducttd'>" + item.Name + "</td>"
+                                + "<td class='prtoducttd'>" + item.Salary + "</td>"
+                                + "<td class='prtoducttd'>" + item.EmpNo + "</td>"
+                                + "</tr>";
+                            $('#tblEmployees tbody').append(rows);
+                        });
+                      },
+                      error: function (ex) {
+                        var r = jQuery.parseJSON(response.responseText);
+                        alert("Message: " + r.Message);
+                        alert("StackTrace: " + r.StackTrace);
+                        alert("ExceptionType: " + r.ExceptionType);
+                      }
+                })
+            });
+        });
+        
+             
+      
+
+    </script>
+}
